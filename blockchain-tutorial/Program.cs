@@ -17,8 +17,13 @@ namespace blockchain_tutorial
             public string data { get; set; }
             public int nonce { get; set; }
 
+            public Block(int nonce, string data, byte[] hash)
+            {
+                this.hash = hash;
+                this.data = data;
+                this.nonce = nonce;
+            }
 
- 
             public byte[] generate_hash()
             {
                 string complete = Convert.ToString(this.nonce) + this.data; 
@@ -51,19 +56,63 @@ namespace blockchain_tutorial
         static void Main(string[] args)
         {
 
-            //Blockchain blockchain = new Blockchain();
-            Block ob1 = new Block();
-            List<Block> blockchain = new List<Block>();
-            
-            ob1.data = "sebasTOrobert100";
-            ob1.nonce = 0;
-            ob1.hash = ob1.generate_hash();
-            blockchain.Add(ob1);
 
-            PrintBytes(ob1.hash); 
+            List<Block> blockchain = new List<Block>();
+            string user1, user2;
+            double amount;
+
+            for (int i=0; i < 3; i++){
+                
+                WriteLine("INTRODUZCA EL USUARIO QUE ENVIA");
+                user1 = ReadLine();
+                WriteLine("Introduzca el usaurio que RECIBE");
+                user2 = ReadLine();
+                WriteLine("¿Cuanto desea enviar?");
+                amount = Convert.ToDouble(ReadLine());
+  
+                    blockchain.Add(new Block(blockchain.Count + 1,
+                                            DataFormat(user1, user2, amount),
+                                            generate_hash(blockchain.Count + 1, DataFormat(user1, user2, amount))));
+                
+                WriteLine("----------------------------------------------");
+                WriteLine($"BLOQUE #{blockchain.Count} ES:");
+                PrintBytes(blockchain[blockchain.Count - 1].hash);
+                WriteLine("\n");
+                WriteLine("----------------------------------------------");
+                
+            }
 
         }
+        static byte[] generate_hash(int nonce,string data)
+        {
+            string complete = Convert.ToString(nonce) + data;
+            byte[] c_byte = Encoding.ASCII.GetBytes(complete), conver;
+            SHA256 sha = SHA256.Create();
+            conver = sha.ComputeHash(c_byte);
+            return conver;
+        }
+        static string DataFormat(string user1,string user2,double amount)
+        {
+            string data;
+            data = $"{user1}TO{user2}:{amount}";
+            return data;
+        }
 
+        static double SecondsNow()
+        {
+            double sec;
+            TimeSpan tI = TimeSpan.Parse(DateTime.Now.ToString("hh:mm:ss"));
+            sec = tI.TotalSeconds;
+            return sec;
+        }
+        static double CalculateTime()
+        {
+            TimeSpan ti = TimeSpan.Parse(DateTime.Now.ToString("hh:mm:ss"));
+            TimeSpan tf = TimeSpan.Parse("00:02:45");
+            TimeSpan result = ti.Add(tf);
+            return result.TotalSeconds;
+
+        }
 
         static void PrintBytes(byte[] array)
         {
