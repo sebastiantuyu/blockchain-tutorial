@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using static System.Console;
@@ -13,17 +14,11 @@ namespace blockchain_tutorial
 
             //PROPIEDADES DE LA CLASE
             public byte[] hash { get; set; }
-            
             public string data { get; set; }
             public int nonce { get; set; }
 
 
-            /*public Block(string hash, int nonce)
-            {
-                this.hash = hash;
-                this.nonce = nonce;
-            }*/
-
+ 
             public byte[] generate_hash()
             {
                 string complete = Convert.ToString(this.nonce) + this.data; 
@@ -33,30 +28,53 @@ namespace blockchain_tutorial
                 return conver;
             }
 
+            public int generate_genesis()
+            {
+                this.nonce = 0;
+                this.data = "SatoshiTOBob100";
+                this.hash = generate_hash();
+                return 0;
+            }
+
+
+        }
+
+        class Blockchain
+        {
+            
+            public byte[] prev_hash { get; set; }
+
 
         }
 
 
         static void Main(string[] args)
         {
- 
-            Block ob1 = new Block();
 
+            //Blockchain blockchain = new Blockchain();
+            Block ob1 = new Block();
+            List<Block> blockchain = new List<Block>();
+            
             ob1.data = "sebasTOrobert100";
             ob1.nonce = 0;
             ob1.hash = ob1.generate_hash();
+            blockchain.Add(ob1);
 
-            for(int i = 0; i < ob1.hash.Length; i++)
-            {
-                Write($"{ob1.hash[i]:X2}");
-               
-            }
-            //
+            PrintBytes(ob1.hash); 
 
         }
 
 
-    
+        static void PrintBytes(byte[] array)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                Write($"{array[i]:X2}");
+
+            }
+        }
     }
+
+
 
 }
