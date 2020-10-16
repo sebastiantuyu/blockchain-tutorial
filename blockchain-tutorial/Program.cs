@@ -48,7 +48,7 @@ namespace blockchain_tutorial
         {
             
             public byte[] prev_hash { get; set; }
-
+             
 
         }
 
